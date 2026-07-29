@@ -1,0 +1,28 @@
+# push / Pull Request のたびに型チェックとビルドを確認する
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-audit --no-fund
+
+      - name: 型チェック
+        run: npm run typecheck
+
+      - name: ビルド
+        run: npm run build
+
+      - name: 単一 HTML ファイル版のビルド
+        run: node scripts/build-standalone.mjs
