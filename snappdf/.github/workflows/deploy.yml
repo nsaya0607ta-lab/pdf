@@ -1,0 +1,59 @@
+# GitHub Pages へ自動デプロイするワークフロー
+# main ブランチへ push すると、ビルドして
+# https://<ユーザー名>.github.io/<リポジトリ名>/ で公開されます。
+#
+# 有効化手順:
+#   リポジトリの Settings → Pages → Build and deployment → Source を
+#   「GitHub Actions」に変更するだけです。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 依存パッケージをインストール
+        run: npm install --no-audit --no-fund
+
+      - name: 型チェックとビルド
+        run: npm run build
+
+      - name: 単一 HTML ファイル版も同梱する
+        run: |
+          node scripts/build-standalone.mjs
+          cp snappdf.html dist/snappdf.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

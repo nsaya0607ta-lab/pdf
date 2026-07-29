@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5"
+    />
+    <title>SnapPDF - 画像をまとめてPDFに</title>
+    <meta name="description" content="スマホで撮った複数の画像を、かんたんに1つのPDFへまとめられるアプリです。" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="SnapPDF" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+    <style>
+      /* 初期表示のちらつきを防ぐため、テーマ色だけ先に当てておく */
+      html {
+        background: #f5f6f8;
+      }
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #0e1116;
+        }
+      }
+      #root:empty::after {
+        content: '読み込み中…';
+        display: block;
+        padding: 40px;
+        text-align: center;
+        font-family: system-ui, sans-serif;
+        color: #8a94a3;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>このアプリを使うには JavaScript を有効にしてください。</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
